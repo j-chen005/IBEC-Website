@@ -175,7 +175,7 @@
   .wpill-mark {
     font-family: var(--sans); font-weight: 700; font-size: 16px;
     color: #eaf1ff; letter-spacing: -0.01em;
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center; gap: 2px;
     text-decoration: none; white-space: nowrap;
   }
   .wpill-mark .dot {
@@ -184,8 +184,8 @@
     box-shadow: 0 0 10px var(--coral);
   }
   .wpill-logo {
-    height: 24px; width: auto; object-fit: contain;
-    margin-right: 4px;
+    height: 56px; width: auto; object-fit: contain;
+    margin-right: 0;
   }
   .wpill-links { display: flex; justify-content: center; gap: 4px; }
   .wpill-link {

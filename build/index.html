@@ -40,17 +40,14 @@ const REGIONS = [
 ];
 
 const EVENTS = [
-  { date: "Apr 25", time: "TBD",   title: "Kiwi Social",                                                          loc: "TBD",           kind: "Social"     },
-  { date: "Apr 29", time: "TBD",   title: "Speaker Event — Neel Doshi, Former MD at Citi & UBS",                  loc: "TBD",           kind: "Speaker"    },
-  { date: "May 01", time: "19:00", title: "Regional Committee Apprentice Final Pitches",                           loc: "Huntsman F65",  kind: "Committee"  },
-  { date: "May 08", time: "17:00", title: "Semester Close — Portfolio Review & Social",                            loc: "JMHH Forum",    kind: "Club"       },
+  { date: "TBD", time: "TBD", title: "Fall Semester Schedule", loc: "TBD", kind: "TBD" },
 ];
 
 const PODCASTS = [
-  { n: "005", title: "Iran at a Crossroads: Conflict, Strategy, and Global Implications",        guest: "Dr. Farah Jan · Univ. of Pennsylvania",  dur: "33:56", href: "https://www.youtube.com/@PennIBEC" },
-  { n: "004", title: "The Future of Global Trade | Tariffs, Deglobalization, and AI",            guest: "Michael Waugh · Economist",               dur: "33:20", href: "https://www.youtube.com/@PennIBEC" },
-  { n: "003", title: "Can Oil Restart Venezuela? Economics, Institutions, and the Road Ahead",   guest: "WIBEC Research Team",                     dur: "32:34", href: "https://www.youtube.com/@PennIBEC" },
-  { n: "002", title: "Bailouts, Ballots, and Big Markets",                                       guest: "Dr. Maria Pia Olivero",                   dur: "38:42", href: "https://www.youtube.com/@PennIBEC" },
+  { n: "005", title: "Iran at a Crossroads: Conflict, Strategy, and Global Implications",        guest: "Dr. Farah Jan · Univ. of Pennsylvania",  dur: "33:56", href: "https://www.youtube.com/watch?v=d-qQ2ZpFoZI" },
+  { n: "004", title: "The Future of Global Trade | Tariffs, Deglobalization, and AI",            guest: "Michael Waugh · Economist",               dur: "33:20", href: "https://www.youtube.com/watch?v=JRoFnUmflKc" },
+  { n: "003", title: "Can Oil Restart Venezuela? Economics, Institutions, and the Road Ahead",   guest: "WIBEC Research Team",                     dur: "32:34", href: "https://www.youtube.com/watch?v=xU6CycjI-yM" },
+  { n: "002", title: "Bailouts, Ballots, and Big Markets",                                       guest: "Dr. Maria Pia Olivero",                   dur: "38:42", href: "https://www.youtube.com/watch?v=PdxM_VK1sF4" },
 ];
 
 const TICKER_ITEMS = [
@@ -573,7 +570,7 @@ function WhoWeAre() {
           </div>
           <div className="reveal" style={{ paddingTop:40 }}>
             <p className="serif" style={{ fontSize:26, lineHeight:1.4, color:"var(--ink-900)", margin:0 }}>
-              We do three things — and only three things — <em style={{ color:"var(--coral-ink)" }}>very seriously.</em>
+              We pride ourselves on three main things.
             </p>
             <div style={{ marginTop:40, display:"grid", gap:28 }}>
               {[
@@ -690,8 +687,7 @@ function EventsStrip({ go }) {
     <section>
       <div className="container-wide">
         <div className="section-head">
-          <div><div className="n">§ 03 — Calendar</div><h2>This semester.</h2></div>
-          <p>The weekly rhythm: research roundtable on Mondays, committee pitches on Thursdays, external speakers as they come.</p>
+          <div><div className="n">§ 03 — Calendar</div><h2>Fall semester.</h2></div>
         </div>
         <div style={{ borderTop:"1px solid var(--ink-900)" }}>
           {EVENTS.map((e,i) => (
@@ -723,12 +719,11 @@ function PodcastRail() {
       <div className="container-wide">
         <div className="section-head">
           <div><div className="n">§ 04 — Audio</div><h2>The WIBEC podcast.</h2></div>
-          <p>Long-form conversation with faculty, practitioners, and members back from internships. Released bi-weekly.</p>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:48 }}>
-          <div style={{ overflow:"hidden", aspectRatio:"1/1" }}>
-            <img src="images/home/teamphoto.JPEG" alt="WIBEC meeting" style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"center top", display:"block" }}/>
-          </div>
+          <a href="https://www.youtube.com/@WIBEC" target="_blank" rel="noopener" style={{ overflow:"hidden", aspectRatio:"16/9", display:"block" }}>
+            <img src="images/podcast/youtube-channel-home.png" alt="WIBEC YouTube channel" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
+          </a>
           <div>
             {PODCASTS.map(p => (
               <a key={p.n} href={p.href} target="_blank" rel="noopener" style={{
