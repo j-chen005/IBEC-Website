@@ -852,7 +852,7 @@ function CommitteePage() {
               { t:"Cash & Equivalents",b:"U.S. Treasury bills, government money-market funds, and similar high-liquidity instruments." },
             ].map(it => (
               <div key={it.t} style={{ padding:"24px 28px", background:"#fff", border:"1px solid var(--rule)" }}>
-                <h4 className="h-serif" style={{ fontSize:20, margin:"0 0 10px", color:"#2f7edb" }}>{it.t}</h4>
+                <h4 className="h-serif" style={{ fontSize:20, margin:"0 0 10px", color:"var(--coral-ink)" }}>{it.t}</h4>
                 <p style={{ margin:0, fontSize:14, color:"var(--ink-500)", lineHeight:1.6 }}>{it.b}</p>
               </div>
             ))}
@@ -924,7 +924,7 @@ function CommitteePage() {
           <h2 className="display" style={{ fontSize:"clamp(48px,6vw,96px)", margin:"16px 0 24px", color:"var(--paper-2)" }}>
             Read the <em style={{ color:"var(--coral)" }}>IPS.</em>
           </h2>
-          <p className="serif" style={{ fontSize:18, fontStyle:"italic", color:"rgba(255,255,255,0.85)", maxWidth:600, margin:"0 auto 36px" }}>
+          <p className="serif" style={{ fontSize:18, fontStyle:"italic", color:"var(--ink-500)", maxWidth:600, margin:"0 auto 36px" }}>
             The IPS is the Fund's governing document for portfolio construction, permissible investments, risk limits, decision-making, and monitoring.
           </p>
           <a href="assets/IBEC_IPS.pdf" target="_blank" rel="noopener" className="btn btn-coral">Download IPS (PDF) <span className="arr">→</span></a>
