@@ -137,6 +137,18 @@
     return `<a href="${p.href}" class="wpill-link${isActive ? ' is-active' : ''}">${p.label}</a>`;
   }).join('');
 
+  const mobileNavLinksHtml = pages.flatMap(p => {
+    if (p.children) {
+      const childLinks = p.children.map(c => {
+        const cActive = navLinkIsActive(c.href);
+        return `<a href="${c.href}" class="wpill-mobile-link wpill-mobile-sub-link${cActive ? ' is-active' : ''}">${c.label}</a>`;
+      }).join('');
+      return [`<div class="wpill-mobile-section-label">${p.label}</div>`, childLinks];
+    }
+    const isActive = navLinkIsActive(p.href);
+    return [`<a href="${p.href}" class="wpill-mobile-link${isActive ? ' is-active' : ''}">${p.label}</a>`];
+  }).join('');
+
   const cssLink = EMBED.skipCssLink ? "" : `<link rel="stylesheet" href="assets/css/wibec.css">\n`;
   const gaBlock = EMBED.skipGa ? "" : `
 <!-- Google Analytics -->
@@ -238,15 +250,62 @@
   .ticker-inject .ticker-wrap {
     background: #071428; border-color: rgba(0,212,255,0.12);
   }
+  /* ── Hamburger button ─────────────────────────────────── */
+  .wpill-hamburger {
+    display: none; flex-direction: column; justify-content: center;
+    gap: 5px; background: none; border: none;
+    cursor: pointer; padding: 6px 4px; flex-shrink: 0;
+  }
+  .wpill-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: rgba(234,241,255,0.85); border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+  .wpill-nav.menu-open .wpill-hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .wpill-nav.menu-open .wpill-hamburger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .wpill-nav.menu-open .wpill-hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  /* ── Mobile nav menu ──────────────────────────────────── */
+  .wpill-mobile-menu {
+    display: none; flex-direction: column;
+    padding: 4px 8px 12px; margin-top: 4px;
+    border-top: 1px solid rgba(0,212,255,0.12);
+  }
+  .wpill-nav.menu-open .wpill-mobile-menu { display: flex; }
+  .wpill-mobile-link {
+    display: block; padding: 11px 14px; font-size: 15px; font-weight: 500;
+    color: rgba(234,241,255,0.78); text-decoration: none;
+    border-radius: 10px; transition: background 0.15s, color 0.15s;
+    font-family: var(--sans);
+  }
+  .wpill-mobile-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .wpill-mobile-link.is-active { color: #fff; background: rgba(0,212,255,0.13); }
+  .wpill-mobile-section-label {
+    padding: 12px 14px 3px; font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(0,212,255,0.45);
+    font-family: var(--mono);
+  }
+  .wpill-mobile-sub-link {
+    padding-left: 22px; font-size: 14px; font-weight: 400;
+    color: rgba(234,241,255,0.55);
+  }
+  /* ── Mobile breakpoint ────────────────────────────────── */
   @media (max-width: 640px) {
-    .wpill-nav { width: calc(100% - 32px); top: 10px; }
-    .wpill-bar { padding: 5px 10px 5px 12px; gap: 8px; }
-    .wpill-logo { height: 38px; }
+    .wpill-nav { width: calc(100% - 32px); top: 10px; border-radius: 18px; }
+    .wpill-nav.menu-open {
+      background: rgba(6,14,38,0.95) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.6) !important;
+      backdrop-filter: blur(22px) saturate(1.6) !important;
+      border-color: rgba(0,212,255,0.18) !important;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.45) !important;
+      border-radius: 18px !important;
+    }
+    .wpill-bar { padding: 8px 16px; gap: 0; }
+    .wpill-logo { height: 40px; }
     .wpill-mark { font-size: 14px; }
-    .wpill-links { overflow-x: auto; scrollbar-width: none; gap: 0; }
-    .wpill-links::-webkit-scrollbar { display: none; }
-    .wpill-link { padding: 6px 8px; font-size: 11px; flex-shrink: 0; }
-    .ticker-inject { padding-top: 68px; }
+    .wpill-links { display: none !important; }
+    .wpill-hamburger { display: flex; }
+    .wpill-bar > span { display: none; }
+    .ticker-inject { padding-top: 72px; }
   }
 </style>
 
@@ -255,7 +314,12 @@
   <div class="wpill-bar">
     <a href="${homeMarkHref}" class="wpill-mark"><img src="images/wibec-logo.png" class="wpill-logo" alt="WIBEC" />WIBEC</a>
     <div class="wpill-links">${navLinks}</div>
-    <span></span>
+    <button class="wpill-hamburger" id="wpill-hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="wpill-mobile-menu" id="wpill-mobile-menu" role="navigation" aria-label="Mobile navigation">
+    ${mobileNavLinksHtml}
   </div>
 </nav>
 ${gaBlock}
@@ -333,6 +397,22 @@ ${gaBlock}
         }
       });
     });
+
+    // Hamburger toggle
+    const hamburger = document.getElementById('wpill-hamburger');
+    const mobileMenuEl = document.getElementById('wpill-mobile-menu');
+    if (hamburger && mobileMenuEl && nav) {
+      hamburger.addEventListener('click', function () {
+        const isOpen = nav.classList.toggle('menu-open');
+        hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      mobileMenuEl.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          nav.classList.remove('menu-open');
+          hamburger.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
 
     // Ticker — only when page includes a mount point
     if (document.querySelector('.ticker-inject')) {
