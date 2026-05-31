@@ -238,6 +238,16 @@
   .ticker-inject .ticker-wrap {
     background: #071428; border-color: rgba(0,212,255,0.12);
   }
+  @media (max-width: 640px) {
+    .wpill-nav { width: calc(100% - 32px); top: 10px; }
+    .wpill-bar { padding: 5px 10px 5px 12px; gap: 8px; }
+    .wpill-logo { height: 38px; }
+    .wpill-mark { font-size: 14px; }
+    .wpill-links { overflow-x: auto; scrollbar-width: none; gap: 0; }
+    .wpill-links::-webkit-scrollbar { display: none; }
+    .wpill-link { padding: 6px 8px; font-size: 11px; flex-shrink: 0; }
+    .ticker-inject { padding-top: 68px; }
+  }
 </style>
 
 <!-- Nav -->

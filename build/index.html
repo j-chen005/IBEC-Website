@@ -478,7 +478,7 @@ function Hero() {
         </div>
 
         {/* Text */}
-        <div className="container-wide" style={{
+        <div className="container-wide hero-text-grid" style={{
           position: "absolute", inset: 0,
           display: "grid", gridTemplateColumns: "1.05fr 1fr", gap: 48,
           alignItems: "center", padding: "72px 32px 0", zIndex: 2, pointerEvents: "none",
@@ -544,7 +544,7 @@ function Hero() {
 function StatsStrip() {
   return (
     <section style={{ padding: "56px 0", borderBottom: "1px solid var(--rule)", background: "var(--paper-2)" }}>
-      <div className="container-wide" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)" }}>
+      <div className="container-wide stats-inner-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)" }}>
         {STATS.map((s,i) => (
           <div key={i} style={{ padding: "8px 32px", borderLeft: i===0?"none":"1px solid var(--rule)" }}>
             <div style={{ fontFamily:"var(--serif)", fontSize:64, lineHeight:1, color:"var(--ink-900)", letterSpacing:"-0.02em" }}>{s.n}</div>
@@ -564,7 +564,7 @@ function WhoWeAre() {
           <div><div className="n">§ 01 — Mandate</div><h2>Who we are.</h2></div>
           <p>WIBEC — the Wharton International Business &amp; Economics Club — is a student committee for international capital markets. We sit at the intersection of economics, global affairs, and investing.</p>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:64, alignItems:"start" }}>
+        <div className="who-we-are-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:64, alignItems:"start" }}>
           <div className="reveal" style={{ overflow:"hidden" }}>
             <img src="images/team/officers.jpg" alt="WIBEC officers on the steps of Steinberg Dietrich Hall" style={{ width:"100%", height:"auto", display:"block" }}/>
           </div>
@@ -662,7 +662,7 @@ function CommitteesMap() {
             FIG. 02 — REGIONAL COMMITTEES · EQUIRECT PROJ
           </div>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:0, marginTop:40, borderTop:"1px solid rgba(0,212,255,0.15)" }}>
+        <div className="committees-region-list" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:0, marginTop:40, borderTop:"1px solid rgba(0,212,255,0.15)" }}>
           {REGIONS.map((r,i) => (
             <div key={r.id} style={{
               padding:"24px 20px",
@@ -691,7 +691,7 @@ function EventsStrip({ go }) {
         </div>
         <div style={{ borderTop:"1px solid var(--ink-900)" }}>
           {EVENTS.map((e,i) => (
-            <a key={i} href="events.html" style={{
+            <a key={i} href="events.html" className="event-row" style={{
               display:"grid", gridTemplateColumns:"120px 72px 1fr 180px 120px 40px",
               gap:24, padding:"28px 0", borderBottom:"1px solid var(--rule)",
               alignItems:"center", cursor:"pointer", transition:"background .25s", textDecoration:"none",
@@ -720,7 +720,7 @@ function PodcastRail() {
         <div className="section-head">
           <div><div className="n">§ 04 — Audio</div><h2>The WIBEC podcast.</h2></div>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:48 }}>
+        <div className="podcast-outer-grid" style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:48 }}>
           <a href="https://www.youtube.com/@WIBEC" target="_blank" rel="noopener" style={{ overflow:"hidden", aspectRatio:"16/9", display:"block" }}>
             <img src="images/podcast/youtube-channel-home.png" alt="WIBEC YouTube channel" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
           </a>
@@ -759,7 +759,7 @@ function ApplyCTA() {
         <p className="serif" style={{ fontSize:22, fontStyle:"italic", color:"var(--ink-700)", maxWidth:640, margin:"0 auto 40px" }}>
           Applications open September 2 for all Penn undergraduates. No prerequisite beyond curiosity about how the world's economies work.
         </p>
-        <div style={{ display:"inline-flex", gap:14 }}>
+        <div className="cta-btns" style={{ display:"inline-flex", gap:14 }}>
           <a href="https://pennclubs.com/club/international-business-and-economics-club/" target="_blank" rel="noopener" className="btn btn-coral">Apply on Penn Clubs <span className="arr">→</span></a>
           <a href="learn.html" className="btn btn-ghost">Foundations Program</a>
         </div>
@@ -803,7 +803,7 @@ function CommitteePage() {
             <span>Portfolio Governance</span>
             <span>WIBEC Penn Fund</span>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:64, alignItems:"end" }}>
+          <div className="committee-hero-grid" style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:64, alignItems:"end" }}>
             <h1 className="display" style={{ fontSize:"clamp(56px,7vw,108px)", margin:0 }}>
               The committee <em style={{ color:"var(--coral-ink)" }}>of&nbsp;record.</em>
             </h1>
@@ -821,7 +821,7 @@ function CommitteePage() {
             <div><div className="n">§ 01 — Roles</div><h2>How the IC operates.</h2></div>
             <p>Three interconnected roles drive the Fund's investment process from research to execution.</p>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:0, borderTop:"1px solid var(--ink-900)" }}>
+          <div className="committee-roles-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:0, borderTop:"1px solid var(--ink-900)" }}>
             {[
               { n:"01", t:"Executive Board.",      b:"Determines the composition of the Investment Committee, appoints and manages IC members, and oversees the strategic direction of the Fund." },
               { n:"02", t:"Investment Committee.", b:"Holds decision rights for all portfolio changes, reviews recommendations, votes on trade approvals, and monitors compliance with the IPS." },
@@ -844,7 +844,7 @@ function CommitteePage() {
             <div><div className="n">§ 02 — Objective</div><h2>What we invest in.</h2></div>
             <p>The Fund targets high total returns through a diversified public-markets portfolio while giving members practical experience in global macro awareness, security selection, portfolio construction, and risk management.</p>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:32 }}>
+          <div className="committee-objectives-grid" style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:32 }}>
             {[
               { t:"Equities",          b:"Publicly traded common stocks, ADRs, and equity ETFs across all market capitalizations." },
               { t:"Fixed Income",      b:"U.S. Treasuries and agencies, investment-grade corporate bonds, and sovereign bonds of developed and select emerging markets." },
@@ -900,7 +900,7 @@ function CommitteePage() {
             <div><div className="n">§ 04 — Process</div><h2>From idea to position.</h2></div>
             <p>From idea generation to ongoing monitoring, every step of the process is designed to mirror institutional best practices.</p>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:32 }}>
+          <div className="process-grid" style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:32 }}>
             {[
               { n:"01", t:"Idea generation.",   b:"Investment ideas originate from regional committees or any WIBEC member and are submitted for IC review." },
               { n:"02", t:"Review & vote.",     b:"The IC discusses thesis quality, portfolio fit, and risk impact. Proposals are approved by simple majority of voting members when a quorum is present." },

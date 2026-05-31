@@ -490,4 +490,72 @@ section { padding: 96px 0; }
   .process-grid { grid-template-columns: repeat(2, 1fr); }
   .event-row { grid-template-columns: 90px 1fr 90px; gap: 12px; }
   .event-row .event-time, .event-row .event-loc, .event-row .event-arr { display: none; }
+  /* page-level layout helpers */
+  .page-hero-grid      { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .committee-hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .page-grid-4         { grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; }
+  .committee-roles-grid     { grid-template-columns: 1fr 1fr !important; }
+  .committee-objectives-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 640px) {
+  /* Layout */
+  .container, .container-wide { padding: 0 18px; }
+  section { padding: 52px 0; }
+
+  /* Typography */
+  .section-head h2 { font-size: 30px; }
+  .page-header-meta { flex-direction: column; gap: 4px; }
+
+  /* Footer */
+  footer.site { margin-top: 60px; padding: 52px 0 32px; }
+  footer.site .grid { grid-template-columns: 1fr !important; gap: 28px; }
+  footer.site .wordmark { font-size: 40px; }
+  footer.site .bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  /* Nav (legacy nav.top) */
+  nav.top .links a { padding: 6px 8px; font-size: 11px; }
+
+  /* Stats */
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-cell { padding: 8px 16px; }
+
+  /* Officers / regions / process */
+  .officers-grid { grid-template-columns: repeat(2, 1fr); }
+  .regions-grid  { grid-template-columns: repeat(2, 1fr); }
+  .process-grid  { grid-template-columns: 1fr !important; gap: 20px; }
+
+  /* Event rows */
+  .event-row { grid-template-columns: 80px 1fr !important; gap: 8px; }
+
+  /* Holdings table — hide least important columns */
+  .holdings-head, .holdings-row {
+    grid-template-columns: 40px 1fr 80px 60px !important;
+    gap: 8px;
+  }
+
+  /* ── React inline-grid overrides (className hooks) ──── */
+  .stats-inner-grid   { grid-template-columns: repeat(2, 1fr) !important; }
+  .who-we-are-grid    { grid-template-columns: 1fr !important; gap: 28px !important; }
+  .hero-text-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    padding: 80px 18px 24px !important;
+    align-items: start !important;
+  }
+  .podcast-outer-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .committees-region-list    { grid-template-columns: repeat(2, 1fr) !important; }
+  .committee-roles-grid      { grid-template-columns: 1fr !important; }
+  .committee-objectives-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .committee-hero-grid       { grid-template-columns: 1fr !important; gap: 20px !important; }
+  .page-grid-3               { grid-template-columns: 1fr !important; gap: 20px !important; }
+  .page-grid-2               { grid-template-columns: 1fr !important; gap: 20px !important; }
+  .cta-btns {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100%;
+    gap: 10px !important;
+  }
+  .cta-btns .btn { text-align: center; justify-content: center; }
 }
