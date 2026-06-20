@@ -23,19 +23,6 @@
     { sym: "YPF",    val: "28.00",  ch: "+1.22%", dir: "up" },
   ];
 
-  // Yahoo Finance symbols — IBEC current portfolio
-  const YF_SYMBOLS = [
-    { sym: "VOO",    yf: "VOO"    },
-    { sym: "SCHG",   yf: "SCHG"   },
-    { sym: "PLTR",   yf: "PLTR"   },
-    { sym: "INFY",   yf: "INFY"   },
-    { sym: "TCEHY",  yf: "TCEHY"  },
-    { sym: "FMX",    yf: "FMX"    },
-    { sym: "SBLK",   yf: "SBLK"   },
-    { sym: "XFIV",   yf: "XFIV"   },
-    { sym: "IBE.MC", yf: "IBE.MC" },
-    { sym: "YPF",    yf: "YPF"    },
-  ];
 
   let liveItems = TICKER_ITEMS.slice();
 
@@ -56,28 +43,11 @@
 
   async function fetchLive() {
     try {
-      const results = await Promise.allSettled(
-        YF_SYMBOLS.map(({ sym, yf }) =>
-          fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${yf}?interval=1d&range=1d`)
-            .then(r => r.json())
-            .then(data => {
-              const q = data?.chart?.result?.[0];
-              if (!q) return null;
-              const meta  = q.meta;
-              const price = meta.regularMarketPrice;
-              const prev  = meta.previousClose || meta.chartPreviousClose;
-              const chAbs = price - prev;
-              const chPct = (chAbs / prev) * 100;
-              return {
-                sym,
-                val: sym === "UST 10Y" ? price.toFixed(2) + "%" : fmtNum(price),
-                ch:  (chPct >= 0 ? "+" : "") + chPct.toFixed(2) + "%",
-                dir: chPct >= 0 ? "up" : "dn",
-              };
-            })
-        )
-      );
-      const live = results.filter(r => r.status === "fulfilled" && r.value).map(r => r.value);
+      const API_BASE = 'https://ctboavoqytq4bci6y45uyvk6me0qbgyd.lambda-url.us-east-1.on.aws';
+      const symbols = liveItems.map(t => t.sym).join(',');
+      const r = await fetch(`${API_BASE}/api/ticker?symbols=${encodeURIComponent(symbols)}`);
+      if (!r.ok) return;
+      const live = await r.json();
       if (live.length > 0) {
         const map = Object.fromEntries(live.map(l => [l.sym, l]));
         liveItems = liveItems.map(p => map[p.sym] || p);

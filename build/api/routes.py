@@ -194,6 +194,60 @@ def stock_bulk():
 
 
 # ---------------------------------------------------------------------------
+# Ticker bar: GET /api/ticker?symbols=VOO,SCHG,PLTR
+# Returns [{"sym":"VOO","val":"523.45","ch":"+0.82%","dir":"up"}, ...]
+# Cached for 5 minutes so the Lambda warm-ping keeps it fresh.
+# ---------------------------------------------------------------------------
+def _fetch_ticker_quote(sym):
+    stock = yf.Ticker(sym)
+    fi = stock.fast_info
+    try:
+        price = fi['lastPrice']
+        prev  = fi['previousClose']
+    except Exception:
+        return None
+    if price is None or prev is None:
+        return None
+    ch_pct = (price - prev) / prev * 100
+    val = f'{price:,.0f}' if price >= 1000 else f'{price:.2f}'
+    return {
+        'sym': sym,
+        'val': val,
+        'ch':  ('+' if ch_pct >= 0 else '') + f'{ch_pct:.2f}%',
+        'dir': 'up' if ch_pct >= 0 else 'dn',
+    }
+
+
+@api_bp.route('/ticker')
+def ticker_bar():
+    raw = request.args.get('symbols', '')
+    symbols = [s.strip() for s in raw.split(',') if s.strip()]
+    if not symbols:
+        return jsonify([])
+
+    cache_key = f"ticker:{'|'.join(sorted(symbols))}"
+    cached = _cache_get(cache_key)
+    if cached:
+        return jsonify(cached)
+
+    raw_results = {}
+    with ThreadPoolExecutor(max_workers=min(len(symbols), 10)) as pool:
+        futures = {pool.submit(_fetch_ticker_quote, sym): sym for sym in symbols}
+        for future in as_completed(futures):
+            sym = futures[future]
+            try:
+                data = future.result()
+                if data:
+                    raw_results[sym] = data
+            except Exception:
+                pass
+
+    results = [raw_results[sym] for sym in symbols if sym in raw_results]
+    _cache_set(cache_key, results)
+    return jsonify(results)
+
+
+# ---------------------------------------------------------------------------
 # FX rate: /api/fx/rate?from=INR          (current)
 #          /api/fx/rate?from=INR&date=YYYY-MM-DD  (historical)
 # Returns { "rate": <float> } where rate converts 1 unit of `from` → USD
