@@ -115,32 +115,12 @@ function TickerBar() {
     const fmt = (n) => n >= 1000 ? n.toLocaleString("en-US", { maximumFractionDigits: 0 }) : n.toFixed(2);
     const fetchAll = async () => {
       try {
-        const results = await Promise.allSettled(
-          YF_SYMBOLS.map(({ sym, yf }) =>
-            fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${yf}?interval=1d&range=1d`)
-              .then(r => r.json())
-              .then(data => {
-                const q = data?.chart?.result?.[0];
-                if (!q) return null;
-                const meta = q.meta;
-                const price = meta.regularMarketPrice;
-                const prev  = meta.previousClose || meta.chartPreviousClose;
-                const chAbs = price - prev;
-                const chPct = (chAbs / prev) * 100;
-                return {
-                  sym,
-                  val: sym === "UST 10Y" ? price.toFixed(2) + "%" : fmt(price),
-                  ch:  (chPct >= 0 ? "+" : "") + chPct.toFixed(2) + "%",
-                  dir: chPct >= 0 ? "up" : "dn",
-                };
-              })
-          )
-        );
-        const live = results
-          .filter(r => r.status === "fulfilled" && r.value)
-          .map(r => r.value);
+        const API_BASE = 'https://ctboavoqytq4bci6y45uyvk6me0qbgyd.lambda-url.us-east-1.on.aws';
+        const symbols = YF_SYMBOLS.map(s => s.sym).join(',');
+        const r = await fetch(`${API_BASE}/api/ticker?symbols=${encodeURIComponent(symbols)}`);
+        if (!r.ok) return;
+        const live = await r.json();
         if (live.length > 0) {
-          // Merge live data with static items (keep WIBEC NAV + alpha as-is)
           setItems(prev => {
             const map = Object.fromEntries(live.map(l => [l.sym, l]));
             return prev.map(p => map[p.sym] || p);
