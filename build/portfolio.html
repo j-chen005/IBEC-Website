@@ -702,11 +702,14 @@
 
       const allTickerData = {};
       for(const [ticker, data] of Object.entries(body.results || {})){
+        // London (LSE) tickers quote in pence (GBp) while the GBP FX series is in pounds,
+        // so scale pence to pounds before any FX conversion (e.g. BAE 1808 -> 18.08).
+        const unit = (data.currency === 'GBp') ? 0.01 : 1;
         const seriesLocal = {};
         for(let i = 0; i < data.timestamps.length; i++){
-          if(data.closes[i] != null) seriesLocal[toYMD(data.timestamps[i])] = data.closes[i];
+          if(data.closes[i] != null) seriesLocal[toYMD(data.timestamps[i])] = data.closes[i] * unit;
         }
-        allTickerData[ticker] = { ticker, currency: data.currency, marketPrice: data.marketPrice, seriesLocal };
+        allTickerData[ticker] = { ticker, currency: data.currency, marketPrice: (data.marketPrice || 0) * unit, seriesLocal };
       }
 
       const fxSeries = {};
