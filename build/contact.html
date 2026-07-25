@@ -89,25 +89,28 @@
 
       <!-- Form column -->
       <div>
-        <div class="n" style="margin-bottom:32px">Send a message</div>
-        <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent — we\'ll get back to you shortly.')">
+        <div class="n" style="margin-bottom:32px" id="contact-form-label">Send a message</div>
+        <form id="contact-form" class="contact-form" action="https://formsubmit.co/ajax/whartonibec@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New message from pennibec.com contact form">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 32px">
             <div class="field">
               <label>First name</label>
-              <input type="text" placeholder="Jane" required>
+              <input type="text" name="First name" placeholder="Jane" required>
             </div>
             <div class="field">
               <label>Last name</label>
-              <input type="text" placeholder="Smith" required>
+              <input type="text" name="Last name" placeholder="Smith" required>
             </div>
           </div>
           <div class="field">
             <label>Email</label>
-            <input type="email" placeholder="jsmith@wharton.upenn.edu" required>
+            <input type="email" name="Email" placeholder="jsmith@wharton.upenn.edu" required>
           </div>
           <div class="field">
             <label>Topic</label>
-            <select>
+            <select name="Topic">
               <option value="">Select a topic</option>
               <option>Recruiting / Membership</option>
               <option>Speaking / Events</option>
@@ -117,13 +120,57 @@
           </div>
           <div class="field">
             <label>Message</label>
-            <textarea placeholder="Your message here…" required></textarea>
+            <textarea name="Message" placeholder="Your message here…" required></textarea>
           </div>
+          <div id="contact-form-error" class="mono" style="display:none; font-size:12px; color:var(--coral-ink); margin-bottom:16px"></div>
           <button type="submit" class="btn btn-coral" style="width:100%; justify-content:center">
             Send message <span class="arr">→</span>
           </button>
         </form>
       </div>
+      <script>
+        (function () {
+          const form = document.getElementById('contact-form');
+          const errorBox = document.getElementById('contact-form-error');
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const submitBtn = form.querySelector('button[type="submit"]');
+            errorBox.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending…';
+
+            fetch(form.action, {
+              method: 'POST',
+              headers: { 'Accept': 'application/json' },
+              body: new FormData(form),
+            })
+              .then(function (res) {
+                if (!res.ok) throw new Error('Request failed');
+                return res.json();
+              })
+              .then(function (data) {
+                // FormSubmit's /ajax/ endpoint can return HTTP 200 even when
+                // it didn't actually send anything (e.g. address pending
+                // confirmation) — the real result is in the JSON body.
+                if (data && (data.success === false || data.success === 'false')) {
+                  throw new Error(data.message || 'FormSubmit rejected the request');
+                }
+                form.replaceWith(Object.assign(document.createElement('div'), {
+                  className: 'h-serif',
+                  style: 'font-size:20px; padding:24px 0',
+                  textContent: "Message sent — we'll get back to you shortly.",
+                }));
+                document.getElementById('contact-form-label').textContent = 'Sent';
+              })
+              .catch(function (err) {
+                errorBox.textContent = "Something went wrong sending your message (" + err.message + ") — please email whartonibec@gmail.com directly.";
+                errorBox.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Send message <span class="arr">→</span>';
+              });
+          });
+        })();
+      </script>
 
     </div>
   </div>
