@@ -106,6 +106,11 @@ def _fetch_ticker_data(ticker, start, end):
             closes.append(row.get('Close'))
 
     market_price = closes[-1] if closes else None
+    if market_price is None or market_price != market_price:  # None or NaN
+        try:
+            market_price = stock.fast_info['lastPrice']
+        except Exception:
+            market_price = None
 
     currency = 'USD'
     if '=' not in ticker:
