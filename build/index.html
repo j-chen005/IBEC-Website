@@ -276,6 +276,9 @@ function Hero() {
       if (scrolled <= 8 || scrolled >= travel - 8) return;
       const prog = clamp01(scrolled / travel);
       if (prog <= 0.01 || prog >= 0.98) return;
+      // ignore tiny/jittery deltas when starting a new snap — trackpads emit stray
+      // reversed micro-ticks at gesture start, and trusting one can lock in the wrong direction
+      if (!snapping && Math.abs(e.deltaY) < 4) return;
       e.preventDefault();
       // convert deltaY to velocity (px/sec). Clamp so a flick doesn't overshoot absurdly.
       const inputVel = Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY) * 55, 9000);
