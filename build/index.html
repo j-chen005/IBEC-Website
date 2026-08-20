@@ -322,6 +322,15 @@ function Hero() {
   const pDraw   = range(progress, 0.75, 1.00);
   const pFig    = range(progress, 0.94, 1.00);
 
+  // The hero pins to 100vh with overflow hidden (see below), so on short
+  // viewports (resized windows, fullscreen on a shorter display) the text
+  // block must shrink to fit rather than get clipped. heroFit scales down
+  // from 1 (plenty of room) toward a floor as vh shrinks; below
+  // heroShowRoster the least-essential row (region list) is dropped
+  // entirely so the headline/lede/CTAs always have room.
+  const heroFit = Math.max(0.5, Math.min(1, (vh - 160) / 700));
+  const heroShowRoster = vh >= 680;
+
   const rotRate = 0.225 + (0.02 - 0.225) * pZoom;
   const dAmbient = ambient - prevAmbientRef.current;
   prevAmbientRef.current = ambient;
@@ -471,10 +480,10 @@ function Hero() {
         <div className="container-wide hero-text-grid" style={{
           position: "absolute", inset: 0,
           display: "grid", gridTemplateColumns: "1.05fr 1fr", gap: 48,
-          alignItems: "center", padding: "72px 32px 0", zIndex: 2, pointerEvents: "none",
+          alignItems: "start", padding: `${Math.max(48, Math.round(72*heroFit))}px 32px 0`, zIndex: 2, pointerEvents: "none",
         }}>
           <div style={{ position: "relative", maxWidth: 760, pointerEvents: "auto" }}>
-            <h1 className="display" style={{ fontSize: "clamp(52px,7vw,112px)", margin: 0, letterSpacing: "-0.03em", lineHeight: 1.12, overflow: "visible" }}>
+            <h1 className="display" style={{ fontSize: `clamp(${Math.round(52*heroFit)}px, ${7*heroFit}vw, ${Math.round(112*heroFit)}px)`, margin: 0, letterSpacing: "-0.03em", lineHeight: 1.12, overflow: "visible" }}>
               {[
                 { el: <>Six regions.</>,                                            p: pHead1 },
                 { el: <><em style={{color:"var(--coral-ink)"}}>One</em> fund.</>, p: pHead2 },
@@ -488,41 +497,43 @@ function Hero() {
                 }}>{ln.el}</span>
               ))}
             </h1>
-            <p style={{
-              fontFamily: "var(--serif)", fontSize: 18, fontStyle: "italic",
-              color: "var(--ink-700)", maxWidth: 520, marginTop: 24, lineHeight: 1.5,
+            <p className="hero-lede" style={{
+              fontFamily: "var(--serif)", fontSize: Math.max(13, Math.round(18*heroFit)), fontStyle: "italic",
+              color: "var(--ink-700)", maxWidth: 520, marginTop: Math.round(24*heroFit), lineHeight: 1.5,
               opacity: pPara, transform: `translateY(${(1-pPara)*14}px)`,
             }}>
               The Wharton International Business and Economics Club (WIBEC) at Penn focuses on the intersection of economics, global affairs, and international relations. Through conversation with industry professionals, analysis of current events, and club workshops, this club aims to provide members with a stronger understanding of how to navigate the world of global business.
             </p>
-            <div style={{ display: "flex", gap: 12, marginTop: 24, opacity: pBtns, transform: `translateY(${(1-pBtns)*10}px)` }}>
+            <div style={{ display: "flex", gap: 12, marginTop: Math.round(24*heroFit), opacity: pBtns, transform: `translateY(${(1-pBtns)*10}px)` }}>
               <a className="btn" href="portfolio.html">Open Live Portfolio <span className="arr">→</span></a>
               <a className="btn btn-ghost" href="membership.html">Apply for Fall '26</a>
             </div>
-            <div style={{
-              marginTop: 28, display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "4px 18px",
-              fontFamily: "var(--mono)", fontSize: 10.5, letterSpacing: "0.08em",
-              opacity: pRoster, borderTop: "1px solid var(--rule)", paddingTop: 14, maxWidth: 680,
-            }}>
-              {regions.map((r,i) => (
-                <button key={r.id}
-                  onMouseEnter={() => setHoverId(r.id)}
-                  onMouseLeave={() => setHoverId(null)}
-                  style={{
-                    background: "none", border: "none", padding: "6px 0",
-                    textAlign: "left", cursor: "pointer",
-                    color: hoverId === r.id ? "var(--coral-ink)" : "var(--ink-700)",
-                    textTransform: "uppercase", fontFamily: "inherit",
-                    fontSize: "inherit", letterSpacing: "inherit", transition: "color 120ms",
-                  }}
-                >
-                  <span style={{ color: hoverId===r.id?"var(--coral)":"var(--ink-500)", marginRight: 6 }}>
-                    {String(i+1).padStart(2,"0")}
-                  </span>
-                  {r.name}
-                </button>
-              ))}
-            </div>
+            {heroShowRoster && (
+              <div className="hero-roster-grid" style={{
+                marginTop: Math.round(28*heroFit), display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "4px 18px",
+                fontFamily: "var(--mono)", fontSize: 10.5, letterSpacing: "0.08em",
+                opacity: pRoster, borderTop: "1px solid var(--rule)", paddingTop: Math.round(14*heroFit), maxWidth: 680,
+              }}>
+                {regions.map((r,i) => (
+                  <button key={r.id}
+                    onMouseEnter={() => setHoverId(r.id)}
+                    onMouseLeave={() => setHoverId(null)}
+                    style={{
+                      background: "none", border: "none", padding: "6px 0",
+                      textAlign: "left", cursor: "pointer",
+                      color: hoverId === r.id ? "var(--coral-ink)" : "var(--ink-700)",
+                      textTransform: "uppercase", fontFamily: "inherit",
+                      fontSize: "inherit", letterSpacing: "inherit", transition: "color 120ms",
+                    }}
+                  >
+                    <span style={{ color: hoverId===r.id?"var(--coral)":"var(--ink-500)", marginRight: 6 }}>
+                      {String(i+1).padStart(2,"0")}
+                    </span>
+                    {r.name}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
